@@ -51,11 +51,11 @@ def pipeline(base: str, week: str):
 @app.route("/v1/<name>", methods=["GET"])
 def index(name: str):
     match name:
-        case SupermarketNames.ah.name:
-            # ("https://folder.ah.nl", "/bonus-week-31-2025/page/1")
-            base = "https://folder.ah.nl"
-            week = "/bonus-week-31-2025/page/1"
-            return pipeline(base, week)
+        # case SupermarketNames.ah.name:
+        #     # ("https://folder.ah.nl", "/bonus-week-31-2025/page/1")
+        #     base = "https://folder.ah.nl"
+        #     week = "/bonus-week-31-2025/page/1"
+        #     return pipeline(base, week)
         case SupermarketNames.jumbo.name:
             base = "https://view.publitas.com"
             week = "/jumbo-supermarkten/jumbo-actiefolder-jmta-30/page/1"

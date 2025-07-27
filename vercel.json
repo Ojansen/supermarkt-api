@@ -1,5 +1,23 @@
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index" }
+  ],
+   "redirects": [
+    {
+      "source": "/v1/ah",
+      "destination": "/v1/ah.json",
+      "permanent": false
+    }
+  ],
+  "headers": [
+    {
+      "source": "/v1/ah.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=604800, immutable"
+        }
+      ]
+    }
   ]
 }
