@@ -14,11 +14,53 @@
       "source": "/v1/ah",
       "destination": "/v1/ah.json",
       "permanent": false
+    },
+    {
+      "source": "/v1/jumbo",
+      "destination": "/v1/jumbo.json",
+      "permanent": false
+    },
+    {
+      "source": "/v1/plus",
+      "destination": "/v1/plus.json",
+      "permanent": false
+    },
+    {
+      "source": "/v1/kruidvat",
+      "destination": "/v1/kruidvat.json",
+      "permanent": false
     }
   ],
   "headers": [
     {
       "source": "/v1/ah.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=604800, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/v1/jumbo.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=604800, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/v1/plus.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=604800, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/v1/kruidvat.json",
       "headers": [
         {
           "key": "Cache-Control",
