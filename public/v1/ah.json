@@ -1,13 +1,1 @@
-{
-  "week": 30,
-  "producten": [
-    {
-      "naam": "SiSi",
-      "omschrijving": "1+1 gratis opalle combinaties van Sisi",
-      "items": ["Sisi no bubbles", "Sisi orange"],
-      "aanbieding": "1+1",
-      "prijs_eerst": 4.59,
-      "prijs_nu": 2.49
-    }
-  ]
-}
+{"week": 39, "producten": [{"naam": "SiSi", "omschrijving": "1+1 gratis opalle combinaties van Sisi", "items": ["Sisi no bubbles", "Sisi orange"], "aanbieding": "1+1", "prijs_eerst": 4.59, "prijs_nu": 2.49}]}

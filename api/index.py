@@ -1,6 +1,8 @@
 import json
+import random
 import re
 from enum import Enum
+from os.path import join, dirname, abspath
 from typing import Any
 
 import requests
@@ -8,6 +10,7 @@ from flask import Flask, render_template
 from requests import Response
 
 app = Flask(__name__)
+dir = dirname(abspath(__file__))
 
 
 class SupermarketNames(Enum):
@@ -50,7 +53,14 @@ def pipeline(base: str, week: str):
 
 @app.route("/api/cron", methods=["GET"])
 def cron():
-    pass
+    with open(join(dir, "..", "public", "v1", "ah.json"), "r") as f:
+        data = json.load(f)
+        data["week"] = random.randint(1, 52)
+        f.close()
+    with open(join(dir, "..", "public", "v1", "ah.json"), "w") as f:
+        f.write(json.dumps(data))
+        f.close()
+    return []
 
 
 @app.route("/", methods=["GET"])
