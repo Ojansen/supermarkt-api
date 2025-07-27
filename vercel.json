@@ -1,8 +1,15 @@
 {
+  "cleanUrls": true,
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index" }
   ],
-   "redirects": [
+  "crons": [
+    {
+      "path": "/api/cron",
+      "schedule": "0 12 * * 1"
+    }
+  ],
+  "redirects": [
     {
       "source": "/v1/ah",
       "destination": "/v1/ah.json",
