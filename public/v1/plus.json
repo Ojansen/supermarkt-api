@@ -1,13 +1,1 @@
-{
-  "week": 30,
-  "producten": [
-    {
-      "naam": "SiSi",
-      "omschrijving": "1+1 gratis opalle combinaties van Sisi",
-      "items": ["Sisi no bubbles", "Sisi orange"],
-      "aanbieding": "1+1",
-      "prijs_eerst": 4.59,
-      "prijs_nu": 2.49
-    }
-  ]
-}
+{"week": 8, "producten": [{"naam": "8 PLUS", "omschrijving": "8 blikjes frisdrank", "items": ["Coca-Cola Zero Sugar", "Fanta Zero Sugar", "Sprite Zero", "Coca-Cola", "Fanta", "Sprite", "Coca-Cola Zero Sugar", "Fanta Zero Sugar"], "aanbieding": "4 blikjes voor 1,99", "prijs_eerst": 3.4, "prijs_nu": 1.99}, {"naam": "Unox Soep", "omschrijving": "2 blikken soep", "items": ["Unox Erwtensoep", "Unox Tomatensoep"], "aanbieding": "2 blikken voor 4,99", "prijs_eerst": 7.38, "prijs_nu": 4.99}, {"naam": "Verspakketten Maaltijd ongekoeld", "omschrijving": "2 stuks verspakketten", "items": ["Verspakketten Maaltijd ongekoeld"], "aanbieding": "2 stuks voor 7,50", "prijs_eerst": 10.98, "prijs_nu": 7.5}, {"naam": "Omo en Biotex", "omschrijving": "2 dozen wasmiddel", "items": ["Omo", "Biotex"], "aanbieding": "1+1 gratis", "prijs_eerst": 12.98, "prijs_nu": 6.49}, {"naam": "Dove en Rexona", "omschrijving": "2 flessen douchegel", "items": ["Dove for Men Douchegel extra fresh"], "aanbieding": "1+1 gratis", "prijs_eerst": 10.58, "prijs_nu": 5.29}, {"naam": "Campina Langlekker", "omschrijving": "2 pakken melk", "items": ["Halfvolle melk"], "aanbieding": "1+1 gratis", "prijs_eerst": 3.98, "prijs_nu": 1.99}, {"naam": "Santa Maria", "omschrijving": "2 pakken tortilla", "items": ["Tortilla original large"], "aanbieding": "1+1 gratis", "prijs_eerst": 5.38, "prijs_nu": 2.69}, {"naam": "Wok- en roerbakgroenten", "omschrijving": "2 zakken groenten", "items": ["Roerbakgroenten Italiaanse stijl"], "aanbieding": "1+1 gratis", "prijs_eerst": 4.58, "prijs_nu": 2.29}]}
