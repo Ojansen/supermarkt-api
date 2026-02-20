@@ -1,3 +1,5 @@
+import Fuse from 'fuse.js'
+
 interface Deal {
   naam: string
   omschrijving: string
@@ -30,6 +32,12 @@ export function useDeals() {
   const week = computed(() => data.value?.week ?? 0)
   const deals = computed(() => data.value?.deals ?? [])
 
+  const fuse = computed(() => new Fuse(deals.value, {
+    keys: ['naam', 'aanbieding', 'items'],
+    threshold: 0.4,
+    ignoreLocation: true,
+  }))
+
   const filteredDeals = computed(() => {
     let result = deals.value
 
@@ -38,12 +46,9 @@ export function useDeals() {
     }
 
     if (debouncedZoek.value) {
-      const q = normalize(debouncedZoek.value)
-      result = result.filter(d =>
-        normalize(d.naam).includes(q)
-        || normalize(d.aanbieding).includes(q)
-        || d.items.some(i => normalize(i).includes(q))
-      )
+      const fuseResults = fuse.value.search(debouncedZoek.value)
+      const matchedSet = new Set(fuseResults.map(r => r.item))
+      result = result.filter(d => matchedSet.has(d))
     }
 
     result = [...result].sort((a, b) => {
