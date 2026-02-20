@@ -1,0 +1,132 @@
+{
+  "recepten": [
+    {
+      "naam": "Pasta Bolognese",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "gehakt", "hoeveelheid": "500g" },
+        { "naam": "pasta", "hoeveelheid": "400g" },
+        { "naam": "tomaten", "hoeveelheid": "1 blik" },
+        { "naam": "ui", "hoeveelheid": "2 stuks" },
+        { "naam": "knoflook", "hoeveelheid": "2 tenen" },
+        { "naam": "wortel", "hoeveelheid": "1 stuk" }
+      ],
+      "tags": ["italiaans", "makkelijk"]
+    },
+    {
+      "naam": "Kipfilet met groenten",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "kipfilet", "hoeveelheid": "500g" },
+        { "naam": "paprika", "hoeveelheid": "2 stuks" },
+        { "naam": "courgette", "hoeveelheid": "1 stuk" },
+        { "naam": "rijst", "hoeveelheid": "300g" },
+        { "naam": "ui", "hoeveelheid": "1 stuk" },
+        { "naam": "sojasaus", "hoeveelheid": "2 eetlepels" }
+      ],
+      "tags": ["gezond", "makkelijk"]
+    },
+    {
+      "naam": "Stamppot boerenkool",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "boerenkool", "hoeveelheid": "500g" },
+        { "naam": "aardappelen", "hoeveelheid": "1kg" },
+        { "naam": "rookworst", "hoeveelheid": "1 stuk" },
+        { "naam": "melk", "hoeveelheid": "100ml" },
+        { "naam": "boter", "hoeveelheid": "25g" }
+      ],
+      "tags": ["hollands", "winter"]
+    },
+    {
+      "naam": "Nasi goreng",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "rijst", "hoeveelheid": "300g" },
+        { "naam": "kipfilet", "hoeveelheid": "300g" },
+        { "naam": "ei", "hoeveelheid": "4 stuks" },
+        { "naam": "wokgroenten", "hoeveelheid": "400g" },
+        { "naam": "ketjap", "hoeveelheid": "3 eetlepels" },
+        { "naam": "ui", "hoeveelheid": "1 stuk" },
+        { "naam": "knoflook", "hoeveelheid": "2 tenen" }
+      ],
+      "tags": ["indonesisch", "makkelijk"]
+    },
+    {
+      "naam": "Macaroni met kaassaus",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "macaroni", "hoeveelheid": "400g" },
+        { "naam": "kaas", "hoeveelheid": "200g" },
+        { "naam": "melk", "hoeveelheid": "300ml" },
+        { "naam": "boter", "hoeveelheid": "30g" },
+        { "naam": "ham", "hoeveelheid": "100g" }
+      ],
+      "tags": ["makkelijk", "kinderen"]
+    },
+    {
+      "naam": "Chili con carne",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "gehakt", "hoeveelheid": "500g" },
+        { "naam": "kidneybonen", "hoeveelheid": "1 blik" },
+        { "naam": "tomaten", "hoeveelheid": "1 blik" },
+        { "naam": "ui", "hoeveelheid": "1 stuk" },
+        { "naam": "paprika", "hoeveelheid": "1 stuk" },
+        { "naam": "rijst", "hoeveelheid": "300g" },
+        { "naam": "knoflook", "hoeveelheid": "2 tenen" }
+      ],
+      "tags": ["mexicaans", "pittig"]
+    },
+    {
+      "naam": "Pannenkoeken",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "bloem", "hoeveelheid": "300g" },
+        { "naam": "melk", "hoeveelheid": "500ml" },
+        { "naam": "ei", "hoeveelheid": "3 stuks" },
+        { "naam": "boter", "hoeveelheid": "20g" }
+      ],
+      "tags": ["hollands", "kinderen"]
+    },
+    {
+      "naam": "Couscous met groenten",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "couscous", "hoeveelheid": "300g" },
+        { "naam": "paprika", "hoeveelheid": "1 stuk" },
+        { "naam": "courgette", "hoeveelheid": "1 stuk" },
+        { "naam": "tomaten", "hoeveelheid": "2 stuks" },
+        { "naam": "ui", "hoeveelheid": "1 stuk" },
+        { "naam": "kipfilet", "hoeveelheid": "300g" }
+      ],
+      "tags": ["marokkaans", "gezond"]
+    },
+    {
+      "naam": "Erwtensoep",
+      "porties": 6,
+      "ingredienten": [
+        { "naam": "spliterwten", "hoeveelheid": "500g" },
+        { "naam": "rookworst", "hoeveelheid": "1 stuk" },
+        { "naam": "wortel", "hoeveelheid": "2 stuks" },
+        { "naam": "prei", "hoeveelheid": "1 stuk" },
+        { "naam": "aardappelen", "hoeveelheid": "300g" },
+        { "naam": "selderij", "hoeveelheid": "2 stengels" }
+      ],
+      "tags": ["hollands", "winter", "soep"]
+    },
+    {
+      "naam": "Wraps met kip",
+      "porties": 4,
+      "ingredienten": [
+        { "naam": "tortilla", "hoeveelheid": "8 stuks" },
+        { "naam": "kipfilet", "hoeveelheid": "400g" },
+        { "naam": "sla", "hoeveelheid": "1 krop" },
+        { "naam": "tomaten", "hoeveelheid": "2 stuks" },
+        { "naam": "ui", "hoeveelheid": "1 stuk" },
+        { "naam": "kaas", "hoeveelheid": "100g" }
+      ],
+      "tags": ["makkelijk", "mexicaans"]
+    }
+  ]
+}
