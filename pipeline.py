@@ -1,5 +1,7 @@
 import json
 import os
+import re
+from collections import Counter
 from datetime import date
 from io import BytesIO
 from os.path import abspath, dirname, join
@@ -9,6 +11,7 @@ from mistralai import Mistral, DocumentURLChunk
 from mistralai.extra import response_format_from_pydantic_model
 from PIL import Image
 from pydantic import BaseModel
+from tqdm import tqdm
 
 
 # --- Pydantic models for structured OCR extraction ---
@@ -27,46 +30,105 @@ class WeeklyDeals(BaseModel):
     producten: list[Product]
 
 
-# --- Store configuration ---
+# --- Store configuration: slug -> (wk_id, display_name) ---
 
 STORES = {
-    "ah": ("publitas", "https://folder.ah.nl", "/bonus-week-8-2026"),
-    "jumbo": (
-        "pdf",
-        "https://view.publitas.com/171/2841137/pdfs/"
-        "d1b35057-1b3d-48b3-b997-0c55f6261768.pdf",
-    ),
-    "plus": (
-        "publitas",
-        "https://view.publitas.com",
-        "/plus-preview-nl/plus-week-8-2026",
-    ),
-    "kruidvat": (
-        "publitas",
-        "https://folder.kruidvat.nl",
-        "/kruidvat-folder-8-16-februari-2026-t-m-22-februari-2026",
-    ),
+    "ah":          (17, "Albert Heijn"),
+    "jumbo":       (40, "Jumbo"),
+    "plus":        (20, "Plus"),
+    "kruidvat":    (8,  "Kruidvat"),
+    "lidl":        (26, "Lidl"),
+    "aldi":        (21, "Aldi"),
+    "dirk":        (18, "Dirk"),
+    "vomar":       (41, "Vomar"),
+    "hoogvliet":   (33, "Hoogvliet"),
+    "poiesz":      (99, "Poiesz"),
+    "dekamarkt":   (34, "Dekamarkt"),
+    "spar":        (37, "Spar"),
+    "boni":        (22, "Boni"),
+    "nettorama":   (62, "Nettorama"),
+    "trekpleister": (27, "Trekpleister"),
+    "makro":       (266, "Makro"),
+    "coop":        (24, "Coop"),
+    "mcd":         (117, "MCD Supermarkt"),
+    "boons":       (263, "Boons Markt"),
 }
 
 OUTPUT_DIR = join(dirname(abspath(__file__)), "public", "v1")
 
 
-# --- Scraping ---
+# --- voordeelmuis.nl scraping ---
+
+VOORDEELMUIS_URL = (
+    "https://www.voordeelmuis.nl/cgi-bin/my2.cgi"
+    "?action=loadJSON&cleanQuery=AwW{wk_id}&lwb=0&upb=500&tb=ab"
+)
+
+DUTCH_MONTHS = {
+    "jan": 1, "feb": 2, "mrt": 3, "apr": 4, "mei": 5, "jun": 6,
+    "jul": 7, "aug": 8, "sep": 9, "okt": 10, "nov": 11, "dec": 12,
+}
 
 
-def fetch_image_urls(base: str, path: str) -> list[str]:
-    url = base + path + "/spreads.json"
+def parse_period(period_str: str) -> tuple[date, date] | None:
+    """Parse '16-22 feb' or '28 jan - 3 feb' into (date_from, date_to)."""
+    period_str = period_str.replace("\xa0", " ").replace("&nbsp;", " ")
+    period_str = period_str.strip().lower()
+
+    # Pattern: "28 jan - 3 feb" (cross-month)
+    m = re.match(
+        r"(\d{1,2})\s+(\w+)\s*-\s*(\d{1,2})\s+(\w+)", period_str
+    )
+    if m:
+        day_from, mon_from, day_to, mon_to = m.groups()
+        month_from = DUTCH_MONTHS.get(mon_from)
+        month_to = DUTCH_MONTHS.get(mon_to)
+        if month_from and month_to:
+            year = date.today().year
+            return (
+                date(year, month_from, int(day_from)),
+                date(year, month_to, int(day_to)),
+            )
+
+    # Pattern: "16-22 feb" (same month)
+    m = re.match(r"(\d{1,2})-(\d{1,2})\s+(\w+)", period_str)
+    if m:
+        day_from, day_to, mon = m.groups()
+        month = DUTCH_MONTHS.get(mon)
+        if month:
+            year = date.today().year
+            return (
+                date(year, month, int(day_from)),
+                date(year, month, int(day_to)),
+            )
+
+    return None
+
+
+def fetch_voordeelmuis(wk_id: int) -> list[dict]:
+    url = VOORDEELMUIS_URL.format(wk_id=wk_id)
     resp = requests.get(url)
     resp.raise_for_status()
-    spreads = resp.json()
+    all_entries = resp.json().get("data", [])
+    today = date.today()
+    active = []
+    for entry in all_entries:
+        period = entry.get("period", "")
+        parsed = parse_period(period)
+        if parsed and parsed[0] <= today <= parsed[1]:
+            active.append(entry)
+    return active
 
-    images = []
-    for spread in spreads:
-        for page in spread.get("pages", []):
-            img_url = page["images"]["at600"]
-            if img_url:
-                images.append(base + img_url)
-    return images
+
+def get_image_urls(deal_entries: list[dict]) -> list[str]:
+    urls = []
+    for entry in deal_entries:
+        entry_id = entry["id"]
+        folder = entry_id // 1000
+        urls.append(
+            f"https://www.voordeelmuis.nl/img/jpg240/{folder}/{entry_id}.jpg"
+        )
+    return urls
 
 
 # --- PDF building ---
@@ -74,7 +136,7 @@ def fetch_image_urls(base: str, path: str) -> list[str]:
 
 def build_pdf_from_images(image_urls: list[str]) -> bytes:
     images = []
-    for url in image_urls:
+    for url in tqdm(image_urls, desc="Downloading images", unit="img"):
         resp = requests.get(url)
         resp.raise_for_status()
         img = Image.open(BytesIO(resp.content))
@@ -121,33 +183,41 @@ def ocr_to_deals(pdf_bytes: bytes, store_name: str) -> WeeklyDeals:
 # --- Pipeline ---
 
 
-def get_pdf_bytes(store_name: str, config: tuple) -> bytes:
-    store_type = config[0]
-
-    if store_type == "pdf":
-        pdf_url = config[1]
-        print(f"[{store_name}] Downloading PDF from {pdf_url}")
-        resp = requests.get(pdf_url)
-        resp.raise_for_status()
-        return resp.content
-
-    # publitas: scrape images and build PDF
-    base, path = config[1], config[2]
-    print(f"[{store_name}] Fetching {base}{path}/spreads.json")
-    image_urls = fetch_image_urls(base, path)
-    print(f"[{store_name}] Found {len(image_urls)} page images")
-    print(f"[{store_name}] Building PDF from images...")
-    return build_pdf_from_images(image_urls)
+def get_pdf_bytes(store_name: str, config: tuple) -> tuple[bytes, list[dict]]:
+    wk_id = config[0]
+    print(f"[{store_name}] Fetching deals from voordeelmuis.nl (wk_id={wk_id})")
+    deal_entries = fetch_voordeelmuis(wk_id)
+    print(f"[{store_name}] Found {len(deal_entries)} deal entries")
+    image_urls = get_image_urls(deal_entries)
+    print(f"[{store_name}] Building PDF from {len(image_urls)} images...")
+    pdf_bytes = build_pdf_from_images(image_urls)
+    return pdf_bytes, deal_entries
 
 
 def run_pipeline(store_name: str, config: tuple):
-    pdf_bytes = get_pdf_bytes(store_name, config)
+    wk_id, display_name = config
+    pdf_bytes, deal_entries = get_pdf_bytes(store_name, config)
 
     print(f"[{store_name}] Running OCR...")
     deals = ocr_to_deals(pdf_bytes, store_name)
 
     week = date.today().isocalendar().week
-    output = {"week": week, "producten": [p.model_dump() for p in deals.producten]}
+
+    # Extract period dates from the most common period value
+    periods = [e.get("period", "") for e in deal_entries if e.get("period")]
+    most_common_period = Counter(periods).most_common(1)[0][0] if periods else ""
+    parsed = parse_period(most_common_period)
+    van = parsed[0].isoformat() if parsed else ""
+    tot = parsed[1].isoformat() if parsed else ""
+
+    output = {
+        "winkel": store_name,
+        "winkel_naam": display_name,
+        "week": week,
+        "van": van,
+        "tot": tot,
+        "producten": [p.model_dump() for p in deals.producten],
+    }
 
     output_path = join(OUTPUT_DIR, f"{store_name}.json")
     with open(output_path, "w") as f:
@@ -157,8 +227,8 @@ def run_pipeline(store_name: str, config: tuple):
 
 
 def run_all():
-    for store_name, config in STORES.items():
+    for store_name, config in tqdm(STORES.items(), desc="Stores", unit="store"):
         try:
             run_pipeline(store_name, config)
         except Exception as e:
-            print(f"[{store_name}] Error: {e}")
+            print(f"\n[{store_name}] Error: {e}")

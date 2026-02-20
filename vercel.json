@@ -3,70 +3,46 @@
   "rewrites": [
     { "source": "/(.*)", "destination": "/api/index" }
   ],
-  "crons": [
-    {
-      "path": "/api/cron",
-      "schedule": "0 12 * * 1"
-    }
-  ],
   "redirects": [
-    {
-      "source": "/v1/ah",
-      "destination": "/v1/ah.json",
-      "permanent": false
-    },
-    {
-      "source": "/v1/jumbo",
-      "destination": "/v1/jumbo.json",
-      "permanent": false
-    },
-    {
-      "source": "/v1/plus",
-      "destination": "/v1/plus.json",
-      "permanent": false
-    },
-    {
-      "source": "/v1/kruidvat",
-      "destination": "/v1/kruidvat.json",
-      "permanent": false
-    }
+    { "source": "/v1/ah", "destination": "/v1/ah.json", "permanent": false },
+    { "source": "/v1/jumbo", "destination": "/v1/jumbo.json", "permanent": false },
+    { "source": "/v1/plus", "destination": "/v1/plus.json", "permanent": false },
+    { "source": "/v1/kruidvat", "destination": "/v1/kruidvat.json", "permanent": false },
+    { "source": "/v1/lidl", "destination": "/v1/lidl.json", "permanent": false },
+    { "source": "/v1/aldi", "destination": "/v1/aldi.json", "permanent": false },
+    { "source": "/v1/dirk", "destination": "/v1/dirk.json", "permanent": false },
+    { "source": "/v1/vomar", "destination": "/v1/vomar.json", "permanent": false },
+    { "source": "/v1/hoogvliet", "destination": "/v1/hoogvliet.json", "permanent": false },
+    { "source": "/v1/poiesz", "destination": "/v1/poiesz.json", "permanent": false },
+    { "source": "/v1/dekamarkt", "destination": "/v1/dekamarkt.json", "permanent": false },
+    { "source": "/v1/spar", "destination": "/v1/spar.json", "permanent": false },
+    { "source": "/v1/boni", "destination": "/v1/boni.json", "permanent": false },
+    { "source": "/v1/nettorama", "destination": "/v1/nettorama.json", "permanent": false },
+    { "source": "/v1/trekpleister", "destination": "/v1/trekpleister.json", "permanent": false },
+    { "source": "/v1/makro", "destination": "/v1/makro.json", "permanent": false },
+    { "source": "/v1/coop", "destination": "/v1/coop.json", "permanent": false },
+    { "source": "/v1/mcd", "destination": "/v1/mcd.json", "permanent": false },
+    { "source": "/v1/boons", "destination": "/v1/boons.json", "permanent": false }
   ],
   "headers": [
-    {
-      "source": "/v1/ah.json",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, s-maxage=604800, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/v1/jumbo.json",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, s-maxage=604800, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/v1/plus.json",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, s-maxage=604800, immutable"
-        }
-      ]
-    },
-    {
-      "source": "/v1/kruidvat.json",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, s-maxage=604800, immutable"
-        }
-      ]
-    }
+    { "source": "/v1/ah.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/jumbo.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/plus.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/kruidvat.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/lidl.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/aldi.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/dirk.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/vomar.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/hoogvliet.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/poiesz.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/dekamarkt.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/spar.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/boni.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/nettorama.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/trekpleister.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/makro.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/coop.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/mcd.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] },
+    { "source": "/v1/boons.json", "headers": [{ "key": "Cache-Control", "value": "public, s-maxage=604800, immutable" }] }
   ]
 }

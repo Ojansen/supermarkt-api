@@ -1,7 +1,8 @@
-from flask.cli import load_dotenv
-
-from pipeline import run_all
+# Pipeline has moved to run.py
+# This file is kept to avoid breaking existing references.
+# Usage: python run.py
 
 if __name__ == "__main__":
-    load_dotenv()
-    run_all()
+    import sys
+    print("Pipeline has moved. Use: python run.py", file=sys.stderr)
+    sys.exit(1)
