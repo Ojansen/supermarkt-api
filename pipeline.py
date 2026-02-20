@@ -2,6 +2,7 @@ import json
 import os
 import re
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date
 from io import BytesIO
 from os.path import abspath, dirname, join
@@ -227,8 +228,14 @@ def run_pipeline(store_name: str, config: tuple):
 
 
 def run_all():
-    for store_name, config in tqdm(STORES.items(), desc="Stores", unit="store"):
-        try:
-            run_pipeline(store_name, config)
-        except Exception as e:
-            print(f"\n[{store_name}] Error: {e}")
+    with ThreadPoolExecutor() as executor:
+        futures = {
+            executor.submit(run_pipeline, store_name, config): store_name
+            for store_name, config in STORES.items()
+        }
+        for future in as_completed(futures):
+            store_name = futures[future]
+            try:
+                future.result()
+            except Exception as e:
+                print(f"[{store_name}] Error: {e}")
