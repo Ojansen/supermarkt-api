@@ -1,13 +1,1 @@
-{
-  "week": 30,
-  "producten": [
-    {
-      "naam": "SiSi",
-      "omschrijving": "1+1 gratis opalle combinaties van Sisi",
-      "items": ["Sisi no bubbles", "Sisi orange"],
-      "aanbieding": "1+1",
-      "prijs_eerst": 4.59,
-      "prijs_nu": 2.49
-    }
-  ]
-}
+{"winkel": "kruidvat", "winkel_naam": "Kruidvat", "week": 8, "van": "2026-02-16", "tot": "2026-02-22", "producten": [{"naam": "Douwe Egberts Aroma Rood", "omschrijving": "Snelfilter, bonen en pads", "items": ["450g", "500g", "54 stuks"], "aanbieding": "2 voor 14.99", "prijs_eerst": 14.99, "prijs_nu": 7.495}, {"naam": "Starbucks by Nespresso", "omschrijving": "Koffiepadjes", "items": ["10 stuks"], "aanbieding": "Niet specifiek vermeld", "prijs_eerst": 4.69, "prijs_nu": 4.69}, {"naam": "Douwe Egberts Aroma Rood oploskoffie", "omschrijving": "Oploskoffie", "items": ["200 gram"], "aanbieding": "Niet specifiek vermeld", "prijs_eerst": 7.99, "prijs_nu": 7.99}, {"naam": "Clipper thee", "omschrijving": "Organic Lemon & Ginger Infusion", "items": ["18 stuks"], "aanbieding": "Niet specifiek vermeld", "prijs_eerst": 3.39, "prijs_nu": 3.39}]}
