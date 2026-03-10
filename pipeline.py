@@ -34,25 +34,12 @@ class WeeklyDeals(BaseModel):
 # --- Store configuration: slug -> (wk_id, display_name) ---
 
 STORES = {
-    "ah":          (17, "Albert Heijn"),
-    "jumbo":       (40, "Jumbo"),
-    "plus":        (20, "Plus"),
-    "kruidvat":    (8,  "Kruidvat"),
-    "lidl":        (26, "Lidl"),
-    "aldi":        (21, "Aldi"),
-    "dirk":        (18, "Dirk"),
-    "vomar":       (41, "Vomar"),
-    "hoogvliet":   (33, "Hoogvliet"),
-    "poiesz":      (99, "Poiesz"),
-    "dekamarkt":   (34, "Dekamarkt"),
-    "spar":        (37, "Spar"),
-    "boni":        (22, "Boni"),
-    "nettorama":   (62, "Nettorama"),
-    "trekpleister": (27, "Trekpleister"),
-    "makro":       (266, "Makro"),
-    "coop":        (24, "Coop"),
-    "mcd":         (117, "MCD Supermarkt"),
-    "boons":       (263, "Boons Markt"),
+    "ah":       (17, "Albert Heijn"),
+    "jumbo":    (40, "Jumbo"),
+    "plus":     (20, "Plus"),
+    "kruidvat": (8,  "Kruidvat"),
+    "lidl":     (26, "Lidl"),
+    "aldi":     (21, "Aldi"),
 }
 
 OUTPUT_DIR = join(dirname(abspath(__file__)), "public", "v1")
@@ -116,9 +103,61 @@ def fetch_voordeelmuis(wk_id: int) -> list[dict]:
     for entry in all_entries:
         period = entry.get("period", "")
         parsed = parse_period(period)
-        if parsed and parsed[0] <= today <= parsed[1]:
+        if parsed and parsed[0] <= today <= parsed[1] and is_food_entry(entry):
             active.append(entry)
     return active
+
+
+FOOD_KEYWORDS = {
+    # beverages
+    "koffie", "koffiebonen", "koffiecups", "koffiepads", "oploskoffie",
+    "thee", "bier", "wijn", "frisdrank", "limonade", "siroop", "sap",
+    "water", "melk", "chocolademelk", "energiedrank", "cider", "smoothie",
+    # dairy
+    "kaas", "yoghurt", "boter", "room", "kwark", "vla", "dessert",
+    "roomkaas", "cottage", "mozzarella", "brie", "camembert", "cheddar",
+    "gouda", "edam", "stilton",
+    # meat & fish
+    "vlees", "vis", "kip", "varken", "rundvlees", "gehakt", "worst",
+    "ham", "spek", "zalm", "haring", "garnalen", "tonijn", "kabeljauw",
+    "kipfilet", "tartaar", "rookworst", "salami",
+    # produce
+    "groenten", "fruit", "appel", "appels", "peer", "tomaat", "tomaten",
+    "komkommer", "paprika", "ui", "aardappel", "banaan", "sinaasappel",
+    "citroen", "aardbei", "druif", "mandarijn", "mandarijnen", "knoflook",
+    "sla", "spinazie", "broccoli", "wortel", "champignon", "champignons",
+    "shi-takes", "kastanjechampignons", "courgette", "aubergine", "asperge",
+    "prei", "bloemkool", "spruitjes", "biet", "witlof", "peren",
+    # pantry
+    "pasta", "rijst", "brood", "meel", "suiker", "zout", "saus", "soep",
+    "olie", "azijn", "mayonaise", "ketchup", "mosterd", "jam", "honing",
+    "pindakaas", "appelstroop", "chips", "koekjes", "crackers", "popcorn",
+    "noten", "pinda", "walnoot", "amandel", "cashew",
+    # sweets & snacks
+    "chocolade", "snoep", "drop", "lollipop", "bonbon", "praline",
+    "stroopwafel", "speculaas", "pepernoot", "marshmallow",
+    # frozen & ready
+    "diepvries", "pizza", "maaltijd", "lasagne", "patat", "frites",
+    "ijs", "sorbet",
+    # bakery
+    "croissant", "cake", "taart", "muffin", "bagel", "wrap", "pita",
+    "beschuit", "ontbijtkoek", "poffertjes",
+    # eggs & breakfast
+    "eieren", "scharreleieren", "havermout", "granola", "muesli",
+    "cornflakes", "ontbijt",
+    # condiments & ingredients
+    "kruiden", "peper", "oregano", "basilicum", "peterselie", "dille",
+    "gember", "kurkuma", "kaneel", "vanille", "cacao",
+    # food indicators
+    "bio", "organic", "koeling", "nutri", "recept", "vegetarisch",
+    "vegan", "glutenvrij", "lactosevrij", "limonadesiroop",
+    "doritos", "lays", "pringles", "hero", "teisseire",
+}
+
+
+def is_food_entry(entry: dict) -> bool:
+    kw_set = {k.lower() for k in entry.get("kw", [])}
+    return bool(kw_set & FOOD_KEYWORDS)
 
 
 def get_image_urls(deal_entries: list[dict]) -> list[str]:
@@ -184,32 +223,36 @@ def ocr_to_deals(pdf_bytes: bytes, store_name: str) -> WeeklyDeals:
 # --- Pipeline ---
 
 
-def get_pdf_bytes(store_name: str, config: tuple) -> tuple[bytes, list[dict]]:
-    wk_id = config[0]
-    print(f"[{store_name}] Fetching deals from voordeelmuis.nl (wk_id={wk_id})")
-    deal_entries = fetch_voordeelmuis(wk_id)
-    print(f"[{store_name}] Found {len(deal_entries)} deal entries")
-    image_urls = get_image_urls(deal_entries)
-    print(f"[{store_name}] Building PDF from {len(image_urls)} images...")
-    pdf_bytes = build_pdf_from_images(image_urls)
-    return pdf_bytes, deal_entries
-
 
 def run_pipeline(store_name: str, config: tuple):
     wk_id, display_name = config
-    pdf_bytes, deal_entries = get_pdf_bytes(store_name, config)
 
-    print(f"[{store_name}] Running OCR...")
-    deals = ocr_to_deals(pdf_bytes, store_name)
+    print(f"[{store_name}] Fetching deals from voordeelmuis.nl (wk_id={wk_id})")
+    deal_entries = fetch_voordeelmuis(wk_id)
+    print(f"[{store_name}] Found {len(deal_entries)} deal entries")
 
-    week = date.today().isocalendar().week
-
-    # Extract period dates from the most common period value
     periods = [e.get("period", "") for e in deal_entries if e.get("period")]
     most_common_period = Counter(periods).most_common(1)[0][0] if periods else ""
     parsed = parse_period(most_common_period)
     van = parsed[0].isoformat() if parsed else ""
     tot = parsed[1].isoformat() if parsed else ""
+
+    output_path = join(OUTPUT_DIR, f"{store_name}.json")
+    if os.path.exists(output_path):
+        with open(output_path) as f:
+            existing = json.load(f)
+        if existing.get("van") == van and existing.get("tot") == tot:
+            print(f"[{store_name}] Cache hit (period {van}–{tot}), skipping OCR")
+            return
+
+    image_urls = get_image_urls(deal_entries)
+    print(f"[{store_name}] Building PDF from {len(image_urls)} images...")
+    pdf_bytes = build_pdf_from_images(image_urls)
+
+    print(f"[{store_name}] Running OCR...")
+    deals = ocr_to_deals(pdf_bytes, store_name)
+
+    week = date.today().isocalendar().week
 
     output = {
         "winkel": store_name,
@@ -219,8 +262,6 @@ def run_pipeline(store_name: str, config: tuple):
         "tot": tot,
         "producten": [p.model_dump() for p in deals.producten],
     }
-
-    output_path = join(OUTPUT_DIR, f"{store_name}.json")
     with open(output_path, "w") as f:
         json.dump(output, f, ensure_ascii=False)
 
