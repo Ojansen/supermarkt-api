@@ -11,7 +11,7 @@ import requests
 from mistralai import Mistral, DocumentURLChunk
 from mistralai.extra import response_format_from_pydantic_model
 from PIL import Image
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from tqdm import tqdm
 
 
@@ -19,16 +19,41 @@ from tqdm import tqdm
 
 
 class Product(BaseModel):
-    naam: str  # product name
-    omschrijving: str  # description of the offer
-    items: list[str]  # specific product variants
-    aanbieding: str  # offer type (e.g. "1+1", "2e halve prijs")
-    prijs_eerst: float  # price before
-    prijs_nu: float  # price after
+    naam: str = Field(description=(
+        "Merknaam en productnaam, bijv. 'Calvé Pindakaas' of 'Hertog Jan Bier'. "
+        "Geen hoeveelheden of prijzen opnemen."
+    ))
+    omschrijving: str = Field(description=(
+        "Korte productomschrijving: smaak, variant of inhoud, bijv. "
+        "'naturel of met stukjes, 650 g' of '6x33 cl'. "
+        "Geen aanbiedingsteksten of prijzen."
+    ))
+    items: list[str] = Field(description=(
+        "Specifieke productvarianten binnen deze aanbieding, bijv. "
+        "['naturel', 'met stukjes pinda'] of ['33 cl', '50 cl']. "
+        "NIET invullen met promotieteksten zoals 'OP=OP', 'ELDERS', 'XXL', "
+        "kortingspercentages of prijzen. Lege lijst als er geen varianten zijn."
+    ))
+    aanbieding: str = Field(description=(
+        "Type aanbieding zoals op het schap staat, bijv. '1+1 gratis', "
+        "'2e halve prijs', '25% korting', 'ELDERS €3.99', '3 voor €5'. "
+        "Leeg laten als er geen expliciete aanbiedingstekst is."
+    ))
+    prijs_eerst: float = Field(description=(
+        "Oorspronkelijke prijs of elders-prijs in euro's als getal, bijv. 3.99. "
+        "0.0 als niet vermeld. NOOIT een kortingspercentage of centbedrag invullen."
+    ))
+    prijs_nu: float = Field(description=(
+        "Actieprijs in euro's als getal, bijv. 2.49. "
+        "0.0 als niet vermeld. NOOIT een kortingspercentage of centbedrag invullen."
+    ))
 
 
 class WeeklyDeals(BaseModel):
-    producten: list[Product]
+    producten: list[Product] = Field(description=(
+        "Lijst van alle voedingsproducten in de folder. "
+        "Niet-voedingsproducten (schoonmaak, kleding, gereedschap, cosmetica) WEGLATEN."
+    ))
 
 
 # --- Store configuration: slug -> (wk_id, display_name) ---
